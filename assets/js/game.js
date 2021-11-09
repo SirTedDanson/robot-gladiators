@@ -57,7 +57,7 @@ var fight = function(enemyName) {
        window.alert(playerName + " has decided to skip this fight. Goodbye!");
         // subtract money from playerMoney for skipping
         playerMoney = playerMoney - 2;
-     }
+      }
       // if no (false), ask question again by running fight() again
       else {
         fight();
@@ -73,5 +73,3 @@ var fight = function(enemyName) {
 for(var i = 0; i < enemyNames.length; i++) {
   fight(enemyNames[i]); 
 } 
-
-
