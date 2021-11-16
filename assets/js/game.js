@@ -125,9 +125,11 @@ var startGame = function () {
   for(var i = 0; i < enemyInfo.length; i++) {
     // check player stats
     console.log(playerInfo);
-    
+
+    // if player is still alive, keep fighting
     if (playerInfo.health > 0) {
-     window.alert("Welcome to Robot Gladiators! Round " + ( i + 1 ));
+      // let player know what round they are in, remember that arrays start at 0 so it needs to have 1 added to it
+      window.alert("Welcome to Robot Gladiators! Round " + ( i + 1 ));
 
       // pick new enemy to fight based on the index of the enemy.names array
      var pickedEnemyObj = enemyInfo[i];
@@ -135,8 +137,7 @@ var startGame = function () {
       // reset enemy.health before starting new fight
       pickedEnemyObj.health = randomNumber(40, 60);
 
-      // use debugger to pause script from running and check what's going on at that moment in the code
-      // debugger;
+      console.log(pickedEnemyObj);
 
       // pass the pickedenemy.name variable's value into the fight function, where it will assume the value of the enemy.name parameter
      fight(pickedEnemyObj);
@@ -152,7 +153,8 @@ var startGame = function () {
         }
       }
     }
-      else {
+    // if player is not alive, break out of the loop and let endGame function run
+    else {
       window.alert("You have lost your robot in battle! Game Over!");
       break;
     }
@@ -164,20 +166,30 @@ var startGame = function () {
 
 // function to end the entire game
 var endGame = function() {
-  if (playerInfo.health > 0) {
   window.alert("The game has now ended. Let's see how you did!");
+ 
+  // check localStorage for high score, if it's not there, use 0
+  var highScore = localStorage.getItem("highscore");
+  if (highScore === null) {
+    highScore = 0;
   }
-  else {
-    window.alert("You've lost your robot in battle.");
+
+  // if player has more money than the high score, player has new high score!
+  if (playerInfo.money > highScore) {
+    localStorage.setItem("highscore", playerInfo.money);
+    localStorage.setItem("name", playerInfo.name);
+
+    alert(playerInfo.name + " now has the high score of " + playerInfo.money + "!");
+  } else {
+    alert(playerInfo.name + " did not beat the high score of " + highScore + ". Maybe next time!");
   }
+
   // ask player if they'd like to play again
   var playAgainConfirm = window.confirm("Would you like to play again?");
 
   if (playAgainConfirm) {
-    // restart the game
     startGame();
-  } 
-  else {
+  } else {
     window.alert("Thank you for playing Robot Gladiators! Come back soon!");
   }
 };
@@ -194,13 +206,13 @@ var shop = function() {
 
   // use switch to carry out action
   switch (shopOptionPrompt) {
-    case "1": // new case
+    case 1: // new case
       playerInfo.refillHealth();  
       break;
-    case "2": // new case
+    case 2: // new case
       playerInfo.upgradeAttack();
       break;
-    case "3": // new case
+    case 3: // new case
       window.alert("Leaving the store.");
       break;
     default:
@@ -210,7 +222,6 @@ var shop = function() {
   }
 };
 
-
 // function to set name
 var getPlayerName = function() {
   var name = "";
@@ -218,12 +229,14 @@ var getPlayerName = function() {
   while (name === "" || name === null) {
     name = prompt("What is your robot's name?");
   }
-
   console.log("Your robot's name is " + name);
   return name;
 };
 
-// player stats
+/* END GAME FUNCTIONS */
+
+/* GAME INFORMATION / VARIABLES */
+
 var playerInfo = {
   name: getPlayerName(),
   health: 100,
@@ -239,8 +252,7 @@ var playerInfo = {
       window.alert("Refilling player's health by 20 for 7 dollars.");
       this.health += 20;
       this.money -= 7;
-    } 
-    else {
+    } else {
       window.alert("You don't have enough money!");
     }
   },
@@ -249,14 +261,12 @@ var playerInfo = {
       window.alert("Upgrading player's attack by 6 for 7 dollars.");
       this.attack += 6;
       this.money -= 7;
-    } 
-    else {
+    } else {
       window.alert("You don't have enough money!");
     }
   }
 };
 
-// enemy stats
 var enemyInfo = [
   {
     name: "Roborto",
@@ -272,5 +282,7 @@ var enemyInfo = [
   }
 ];
 
-// start the game when the page loads
+/* END GAME INFORMATION / VARIABLES */
+
+/* RUN GAME */
 startGame ();
